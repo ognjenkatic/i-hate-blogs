@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  ihateblogs:
+    image: ${DOCKER_REGISTRY-}ihateblogs
+    build:
+      context: .
+      dockerfile: IHateBlogs/Dockerfile

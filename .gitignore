@@ -1,0 +1,12 @@
+.vscode
+*.suo
+.vs
+bin
+obj
+dist
+.docker/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Staging.json
+**/appsettings.Production.json
+*.user
+.env

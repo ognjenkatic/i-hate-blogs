@@ -1,0 +1,109 @@
+﻿@page
+@model IHateBlogs.Pages.RequestModel
+@{
+}
+
+<h2>Select Multiple Items</h2>
+
+<form method="post">
+    <div>
+        <label for="tones">Select Tone:</label>
+        <select class="itemSelect" id="tones">
+            @{
+                foreach (var tag in Model.TagBundle!.Tones)
+                {
+                    <option value="@tag.Name">@tag.Name</option>
+                }
+            }
+        </select>
+        <button class="addBtn" type="button" data-target="tones">Add</button>
+    </div>
+
+    <div>
+        <label for="subjects">Select Subject:</label>
+        <select class="itemSelect" id="subjects">
+            @{
+                foreach (var tag in Model.TagBundle!.Subjects)
+                {
+                    <option value="@tag.Name">@tag.Name</option>
+                }
+            }
+        </select>
+        <button class="addBtn" type="button" data-target="subjects">Add</button>
+    </div>
+
+    <div>
+        <label for="audiences">Select Audience:</label>
+        <select class="itemSelect" id="audiences">
+            @{
+                foreach (var tag in Model.TagBundle!.Audience)
+                {
+                    <option value="@tag.Name">@tag.Name</option>
+                }
+            }
+        </select>
+        <button class="addBtn" type="button" data-target="audiences">Add</button>
+    </div>
+
+    <div>
+        <h3>Selected Tones:</h3>
+        <ul class="selectedItems" id="selectedTones"></ul>
+    </div>
+
+    <div>
+        <h3>Selected Subjects:</h3>
+        <ul class="selectedItems" id="selectedSubjects"></ul>
+    </div>
+
+    <div>
+        <h3>Selected Audiences:</h3>
+        <ul class="selectedItems" id="selectedAudiences"></ul>
+    </div>
+
+    <input type="hidden" name="selectedTones" id="selectedTonesInput" />
+    <input type="hidden" name="selectedSubjects" id="selectedSubjectsInput" />
+    <input type="hidden" name="selectedAudiences" id="selectedAudiencesInput" />
+
+    <button type="submit">Submit</button>
+</form>
+
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".addBtn").click(function () {
+                var target = $(this).data("target");
+                var selectedItem = $("#" + target + " option:selected");
+                var itemId = selectedItem.val();
+                var itemName = selectedItem.text();
+                var selectedList = $("#selected" + target.charAt(0).toUpperCase() + target.slice(1));
+
+                if (selectedList.find("li[data-id='" + itemId + "']").length === 0) {
+                    var listItem = $("<li data-id='" + itemId + "'>" + itemName + " <button class='removeBtn' type='button'>Remove</button></li>");
+                    listItem.find(".removeBtn").click(function () {
+                        listItem.remove();
+                        updateSelectedItemsInput(target);
+                    });
+                    selectedList.append(listItem);
+                    updateSelectedItemsInput(target);
+                } else {
+                    alert("Item is already in the list.");
+                }
+            });
+        });
+
+        function updateSelectedItemsInput(target) {
+            var selectedList = $("#selected" + target.charAt(0).toUpperCase() + target.slice(1));
+            var selectedItemsArray = selectedList.find("li").map(function () {
+                return $(this).data("id");
+            }).get();
+
+            $("#selected" + target.charAt(0).toUpperCase() + target.slice(1) + "Input").val(selectedItemsArray.join(";"));
+        }
+
+
+        
+    </script>
+}

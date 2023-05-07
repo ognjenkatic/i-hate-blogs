@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  ihateblogs:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - ihateblogs.db
+
+
+  ihateblogs.db:
+    container_name: ihateblogsdb
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - psqlvolume:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  ihateblogs.pgadmin:
+    container_name: ihateblogspgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: test
+    volumes:
+      - pgadminvolume:/root/.pgadmin
+    ports:
+      - "8085:80"
+    restart: unless-stopped
+
+volumes:
+  psqlvolume: null
+  pgadminvolume: null 
