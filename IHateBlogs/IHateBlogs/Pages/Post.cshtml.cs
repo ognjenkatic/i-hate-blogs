@@ -1,6 +1,7 @@
 ﻿using IHateBlogs.Application.Commands;
 using IHateBlogs.Application.Common.Util;
 using IHateBlogs.Application.Queries;
+using IHateBlogs.Domain.Entities;
 using Markdig;
 using Markdig.Prism;
 using MediatR;
@@ -20,6 +21,7 @@ namespace IHateBlogs.Pages
     {
         private readonly IMediator mediator;
         public HtmlString MarkdownContent { get; set; }
+        public Post Post { get; set; }
         public PostModel(IMediator mediator)
         {
             this.mediator = mediator;
@@ -34,7 +36,7 @@ namespace IHateBlogs.Pages
                 .Build();
 
             var post = await mediator.Send(new GetPostQuery { Id = id});
-
+            this.Post = post;
             if (post is null)
             {
                 return RedirectToPage("Index");

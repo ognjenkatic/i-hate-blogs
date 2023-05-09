@@ -2,6 +2,17 @@
 @using Markdig;
 @model IHateBlogs.Pages.PostModel
 @{
+    var readTime = string.Format("{0:0.##} minutes to read", (Model.Post.Content.Length / 4.7f) / 183);
+    var state = Model.Post.State.ToString();
+    var tone = string.Join(',',Model.Post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Tone).Select(t => t.Name));
+    var audience = string.Join(',', Model.Post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Audience).Select(t => t.Name));
 }
 
+<div>@state</div>
+<div>@Model.Post.Requester.Name</div>
+<div>@readTime</div>
+<div>@tone</div>
+<div>@audience</div>
+<div>@Model.Post.WritingStartedAt</div>
+<div>@Model.Post.WritingStoppedAt</div>
 <div>@Model.MarkdownContent</div>

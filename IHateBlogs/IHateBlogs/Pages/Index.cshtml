@@ -1,7 +1,11 @@
 ﻿@page
+@using IHateBlogs.Application.Queries;
+@using MediatR;
+@inject IMediator mediator;
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    var posts = await mediator.Send(new GetPostsQuery());
 }
 
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
@@ -55,4 +59,12 @@
 
     <p>So, join me on this exhilarating adventure as we navigate the world of code, embrace the ever-changing moods of the programming landscape, and uncover the secrets of Codeville's vibrant community, one line at a time!</p>
 
+</div>
+<div>
+    @{
+        foreach(var post in posts)
+        {
+            <a href="~/Post/@post.Id">Post - @post.Id</a>
+        }
+    }
 </div>

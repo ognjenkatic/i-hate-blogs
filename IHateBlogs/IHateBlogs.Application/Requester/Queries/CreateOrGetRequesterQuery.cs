@@ -1,4 +1,5 @@
 ﻿using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Application.Common.Util;
 using IHateBlogs.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace IHateBlogs.Application.Queries
 {
     public class CreateOrGetRequesterQuery : IRequest<Requester>
     {
-        public required string IpHash { get; set; }
+        public required string RequesterIp { get; set; }
         public class Handler : IRequestHandler<CreateOrGetRequesterQuery, Requester>
         {
             private static readonly Random Random = new();
@@ -25,9 +26,11 @@ namespace IHateBlogs.Application.Queries
             }
             public async Task<Requester> Handle(CreateOrGetRequesterQuery request, CancellationToken cancellationToken)
             {
+                var ipHash = HashUtil.ComputeSha256Hash(request.RequesterIp);
+
                 return await dbContext.Requesters
-                    .FirstOrDefaultAsync(r => r.IpHash == request.IpHash, cancellationToken: cancellationToken) 
-                    ?? await AddNewRequester(request.IpHash, cancellationToken);
+                    .FirstOrDefaultAsync(r => r.IpHash == ipHash, cancellationToken: cancellationToken) 
+                    ?? await AddNewRequester(ipHash, cancellationToken);
             }
 
             private async Task<Requester> AddNewRequester(string ipHash, CancellationToken cancellationToken)

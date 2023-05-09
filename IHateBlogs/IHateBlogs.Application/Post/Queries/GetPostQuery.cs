@@ -18,7 +18,10 @@ namespace IHateBlogs.Application.Queries
             }
 
             public async Task<Post?> Handle(GetPostQuery request, CancellationToken cancellationToken) 
-                => await dbContext.Posts.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+                => await dbContext.Posts
+                .Include(p => p.Requester)
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace IHateBlogs.Application.Common.Util
         {
             return new HttpClient()
             {
-                Timeout = TimeSpan.FromMinutes(5)
+                Timeout = TimeSpan.FromMinutes(15)
             };
         }
     }

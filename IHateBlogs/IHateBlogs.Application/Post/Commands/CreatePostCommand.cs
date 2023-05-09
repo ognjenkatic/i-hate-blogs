@@ -25,9 +25,7 @@ namespace IHateBlogs.Application.Commands
 
             public async Task<Guid> Handle(CreatePostCommand request, CancellationToken cancellationToken)
             {
-                var ipHash = HashUtil.ComputeSha256Hash(request.RequesterIp);
-
-                var requester = await mediator.Send(new CreateOrGetRequesterQuery { IpHash = ipHash });
+                var requester = await mediator.Send(new CreateOrGetRequesterQuery { RequesterIp = request.RequesterIp }, cancellationToken);
 
                 var tagList = request.Tags.Split(';');
 

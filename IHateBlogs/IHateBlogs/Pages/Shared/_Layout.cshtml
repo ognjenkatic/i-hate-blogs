@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using IHateBlogs.Application.Queries;
+@using MediatR;
+@inject IMediator mediator;
+@{
+    var requester = await mediator.Send(new CreateOrGetRequesterQuery { RequesterIp = Context.Connection.RemoteIpAddress!.ToString() });
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">IHateBlogs</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index"> Welcome <i>@requester.Name</i></a>
                 <input type="text" class="form-control form-control-sm ms-auto" style="width:150px">
             </div>
         </nav>
