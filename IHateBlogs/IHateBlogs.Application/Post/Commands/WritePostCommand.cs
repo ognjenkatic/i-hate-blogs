@@ -18,13 +18,13 @@ namespace IHateBlogs.Application.Commands
         {
             private readonly IBlogDbContext dbContext;
             private readonly OpenAiConfiguration configuration;
-            private readonly IMediator mediator;
+            private readonly IPostCompletionService completionService;
 
-            public Handler(IBlogDbContext dbContext, OpenAiConfiguration configuration, IMediator mediator)
+            public Handler(IBlogDbContext dbContext, OpenAiConfiguration configuration, IPostCompletionService completionService)
             {
                 this.dbContext = dbContext;
                 this.configuration = configuration;
-                this.mediator = mediator;
+                this.completionService = completionService;
             }
 
             public async Task Handle(WritePostCommand request, CancellationToken cancellationToken)
@@ -87,6 +87,7 @@ namespace IHateBlogs.Application.Commands
                     post.Content = conversationResult.Content.ToString();
                     post.WritingStoppedAt = DateTimeOffset.UtcNow;
                     await dbContext.SaveChangesAsync();
+                    await completionService.Refresh(post.Id);
                 }
             }
 
@@ -111,7 +112,7 @@ namespace IHateBlogs.Application.Commands
                     await convo.StreamResponseFromChatbotAsync(async res =>
                     {
                         conversationResult.Content.Append(res);
-                        await mediator.Send(new BroadcastUpdateCommand(res, conversationResult.Post.Id));
+                        await completionService.Update(conversationResult.Post.Id, res);
 
                     });
                 } catch (IOException)

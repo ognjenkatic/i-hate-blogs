@@ -3,6 +3,7 @@ using IHateBlogs.Application;
 using IHateBlogs;
 using IHateBlogs.Infrastructure.Persistence;
 using IHateBlogs.Application.Common.Util;
+using IHateBlogs.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -33,5 +34,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
+app.MapHub<PostCompletionHub>("/postCompletionHub");
 app.Run();

@@ -31,9 +31,9 @@ namespace IHateBlogs.Application.Queries
             {
                 return new TagBundle
                 {
-                    Audience = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Audience).ToListAsync(cancellationToken: cancellationToken),
-                    Subjects = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Subject).ToListAsync(cancellationToken: cancellationToken),
-                    Tones = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Tone).ToListAsync(cancellationToken: cancellationToken)
+                    Audience = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Audience).OrderBy(t => t.Name).ToListAsync(cancellationToken: cancellationToken),
+                    Subjects = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Subject).OrderBy(t => t.Name).ToListAsync(cancellationToken: cancellationToken),
+                    Tones = await dbContext.Tags.Where(t => t.Kind == Tag.TagKind.Tone).OrderBy(t => t.Name).ToListAsync(cancellationToken: cancellationToken)
                 };
             }
         }

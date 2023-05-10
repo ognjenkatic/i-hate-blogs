@@ -27,6 +27,7 @@ namespace IHateBlogs.Pages
         public string? Audience { get; set; }
         public string? Requester { get; set; }
         public string? FinishedAt { get; set; }
+        public string? PostId { get; set; }
         public PostModel(IMediator mediator)
         {
             this.mediator = mediator;
@@ -56,6 +57,7 @@ namespace IHateBlogs.Pages
                 Requester = post.Requester.Name;
                 MarkdownContent = new HtmlString(Markdown.Parse(post.Content, pipeline).ToHtml());
                 FinishedAt = post.State == Post.PostState.Completed ? post.WritingStoppedAt.ToString("D") : "";
+                PostId = post.Id.ToString();
                 return Page();
             }
         }

@@ -33,3 +33,8 @@
 </div>
 <hr />
 <div>@Model.MarkdownContent</div>
+<pre style="white-space: pre-wrap;" id="preview"></pre>
+
+<script>var postId = '@Model.PostId'</script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/blogUpdate.js" asp-append-version="true"></script>

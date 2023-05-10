@@ -56,6 +56,7 @@ Memory-efficient data processing (Memory<T>, Span<T>)
 Event-driven programming with Reactive Extensions (Rx.NET)
 Generics
 Async / await
+Implementing TMF641 Service Order Management in C# ASP.NET API
 Serialization, JSON.NET
 Named tuples, deconstruction
 Covariance, contravariance
