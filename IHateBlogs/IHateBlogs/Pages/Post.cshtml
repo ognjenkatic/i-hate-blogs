@@ -2,17 +2,34 @@
 @using Markdig;
 @model IHateBlogs.Pages.PostModel
 @{
-    var readTime = string.Format("{0:0.##} minutes to read", (Model.Post.Content.Length / 4.7f) / 183);
-    var state = Model.Post.State.ToString();
-    var tone = string.Join(',',Model.Post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Tone).Select(t => t.Name));
-    var audience = string.Join(',', Model.Post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Audience).Select(t => t.Name));
 }
 
-<div>@state</div>
-<div>@Model.Post.Requester.Name</div>
-<div>@readTime</div>
-<div>@tone</div>
-<div>@audience</div>
-<div>@Model.Post.WritingStartedAt</div>
-<div>@Model.Post.WritingStoppedAt</div>
+
+<div class="row">
+    <div class="col-1 my-auto">
+        <svg width="50" height="50" viewBox="0 0 10 10">
+            <defs>
+                <radialGradient id="myGradient">
+                    <stop offset="10%" stop-color="gold" />
+                    <stop offset="95%" stop-color="red" />
+                </radialGradient>
+            </defs>
+
+            <circle cx="5" cy="5" r="4" fill="url('#myGradient')" />
+        </svg>
+    </div>
+    
+    <div class="col">
+        <small class="row d-flex">
+            @Model.Requester
+        </small>
+        <small class="row d-flex">
+            @Model.State @Model.FinishedAt
+        </small>
+        <small class="row d-flex">
+            @Model.Tone &#x2022 @Model.Audience &#x2022 @Model.ReadTime
+        </small>
+    </div>
+</div>
+<hr />
 <div>@Model.MarkdownContent</div>

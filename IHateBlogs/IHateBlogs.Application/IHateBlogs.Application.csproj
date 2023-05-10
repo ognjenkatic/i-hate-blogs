@@ -50,4 +50,8 @@
     <ProjectReference Include="..\IHateBlogs.Domain\IHateBlogs.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Post\Models\" />
+  </ItemGroup>
+
 </Project>

@@ -21,7 +21,12 @@ namespace IHateBlogs.Pages
     {
         private readonly IMediator mediator;
         public HtmlString MarkdownContent { get; set; }
-        public Post Post { get; set; }
+        public string? ReadTime { get; set; }
+        public string? State { get; set; }
+        public string? Tone { get; set; }
+        public string? Audience { get; set; }
+        public string? Requester { get; set; }
+        public string? FinishedAt { get; set; }
         public PostModel(IMediator mediator)
         {
             this.mediator = mediator;
@@ -36,14 +41,21 @@ namespace IHateBlogs.Pages
                 .Build();
 
             var post = await mediator.Send(new GetPostQuery { Id = id});
-            this.Post = post;
+
+            
             if (post is null)
             {
                 return RedirectToPage("Index");
             }
             else
             {
+                ReadTime = string.Format("{0:0.##} minutes to read", (post.Content.Length / 4.7f) / 183);
+                State = post.State.ToString();
+                Tone = string.Join(',', post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Tone).Select(t => t.Name));
+                Audience = string.Join(',', post.Tags.Where(t => t.Kind == Domain.Entities.Tag.TagKind.Audience).Select(t => t.Name));
+                Requester = post.Requester.Name;
                 MarkdownContent = new HtmlString(Markdown.Parse(post.Content, pipeline).ToHtml());
+                FinishedAt = post.State == Post.PostState.Completed ? post.WritingStoppedAt.ToString("D") : "";
                 return Page();
             }
         }

@@ -7,9 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using OpenAI_API;
 using OpenAI_API.Chat;
 using OpenAI_API.Models;
-using System.Diagnostics;
-using System.Formats.Tar;
-using System.Text;
 using static IHateBlogs.Application.Common.Util.EmbededResources;
 
 namespace IHateBlogs.Application.Commands
@@ -21,11 +18,13 @@ namespace IHateBlogs.Application.Commands
         {
             private readonly IBlogDbContext dbContext;
             private readonly OpenAiConfiguration configuration;
+            private readonly IMediator mediator;
 
-            public Handler(IBlogDbContext dbContext, OpenAiConfiguration configuration)
+            public Handler(IBlogDbContext dbContext, OpenAiConfiguration configuration, IMediator mediator)
             {
                 this.dbContext = dbContext;
                 this.configuration = configuration;
+                this.mediator = mediator;
             }
 
             public async Task Handle(WritePostCommand request, CancellationToken cancellationToken)
@@ -109,21 +108,11 @@ namespace IHateBlogs.Application.Commands
 
                     convo.AppendUserInput($"{prompt}{conversationResult.Content}");
 
-                    var counter = 0;
-
                     await convo.StreamResponseFromChatbotAsync(async res =>
                     {
                         conversationResult.Content.Append(res);
+                        await mediator.Send(new BroadcastUpdateCommand(res, conversationResult.Post.Id));
 
-                        if (counter % 5 == 0)
-                        {
-                            conversationResult.Post.Content = conversationResult.Content.ToString();
-                            // it makes no sense saving this here, better save to to memory/cache while it's in progress
-                            await dbContext.SaveChangesAsync();
-                        }
-
-                        counter++;
-                        
                     });
                 } catch (IOException)
                 {

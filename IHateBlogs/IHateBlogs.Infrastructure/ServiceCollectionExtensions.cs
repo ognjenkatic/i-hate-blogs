@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Infrastructure.Cache;
 
 namespace IHateBlogs.Infrastructure
 {
@@ -24,6 +25,8 @@ namespace IHateBlogs.Infrastructure
                     options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
                 }
             );
+
+            services.AddSingleton<ICacheService>(new CacheService());
 
             services.AddScoped<IBlogDbContext>(p => p.GetRequiredService<BlogDbContext>());
         }
