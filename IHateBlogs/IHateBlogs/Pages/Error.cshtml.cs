@@ -22,6 +22,7 @@ namespace IHateBlogs.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            _logger.LogError("Error occurred with RequestId: {RequestId}", RequestId);
         }
     }
 }

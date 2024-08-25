@@ -1,9 +1,13 @@
-﻿using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Application.Common.Interfaces;
 using IHateBlogs.Application.Common.Util;
 using IHateBlogs.Application.Queries;
 using IHateBlogs.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using static IHateBlogs.Application.Common.Util.EmbededResources;
 
 namespace IHateBlogs.Application.Commands
@@ -33,22 +37,22 @@ namespace IHateBlogs.Application.Commands
 
                 if (tags.Count != tagList.Length)
                 {
-                    throw new Exception("Invalid tags supplied");
+                    throw new InvalidOperationException("Invalid tags supplied");
                 }
 
-                if (!tags.Any(t => t.Kind == Tag.TagKind.Subject))
+                if (!tags.Exists(t => t.Kind == Tag.TagKind.Subject))
                 {
-                    throw new Exception("Cannot generate post without subject tag");
+                    throw new InvalidOperationException("Cannot generate post without subject tag");
                 }
 
-                if (!tags.Any(t => t.Kind == Tag.TagKind.Tone))
+                if (!tags.Exists(t => t.Kind == Tag.TagKind.Tone))
                 {
-                    throw new Exception("Cannot generate post without tone tag");
+                    throw new InvalidOperationException("Cannot generate post without tone tag");
                 }
 
-                if (!tags.Any(t => t.Kind == Tag.TagKind.Audience))
+                if (!tags.Exists(t => t.Kind == Tag.TagKind.Audience))
                 {
-                    throw new Exception("Cannot generate post without audience tag");
+                    throw new InvalidOperationException("Cannot generate post without audience tag");
                 }
 
                 var post = new Post
@@ -64,8 +68,6 @@ namespace IHateBlogs.Application.Commands
 
                 return post.Id;
             }
-
-            
         }
     }
 }

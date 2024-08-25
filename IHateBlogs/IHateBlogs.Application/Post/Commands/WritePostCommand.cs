@@ -1,4 +1,4 @@
-﻿using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Application.Common.Interfaces;
 using IHateBlogs.Application.Common.Util;
 using IHateBlogs.Application.Models;
 using IHateBlogs.Domain.Entities;
@@ -8,6 +8,7 @@ using OpenAI_API;
 using OpenAI_API.Chat;
 using OpenAI_API.Models;
 using static IHateBlogs.Application.Common.Util.EmbededResources;
+using System;
 
 namespace IHateBlogs.Application.Commands
 {
@@ -32,7 +33,7 @@ namespace IHateBlogs.Application.Commands
                 var post = await dbContext.Posts
                         .Include(p => p.Tags)
                         .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken)
-                        ?? throw new Exception("No post exists with supplied id");
+                        ?? throw new InvalidOperationException("No post exists with supplied id");
 
                 var conversationResult = new ConversationContext
                 {
@@ -43,17 +44,17 @@ namespace IHateBlogs.Application.Commands
                 {
                     if (post.Tags == null || post.Tags.Count == 0)
                     {
-                        throw new Exception("Cannot generate post without tags");
+                        throw new InvalidOperationException("Cannot generate post without tags");
                     }
 
-                    if (!post.Tags.Any(t => t.Kind == Tag.TagKind.Subject))
+                    if (!post.Tags.Exists(t => t.Kind == Tag.TagKind.Subject))
                     {
-                        throw new Exception("Cannot generate post without subject tag");
+                        throw new InvalidOperationException("Cannot generate post without subject tag");
                     }
 
-                    if (!post.Tags.Any(t => t.Kind == Tag.TagKind.Tone))
+                    if (!post.Tags.Exists(t => t.Kind == Tag.TagKind.Tone))
                     {
-                        throw new Exception("Cannot generate post without tone tag");
+                        throw new InvalidOperationException("Cannot generate post without tone tag");
                     }
 
                     var prompt = ReadResource(BlogResource.Prompt, new()
@@ -72,12 +73,12 @@ namespace IHateBlogs.Application.Commands
                     if (string.IsNullOrEmpty(conversationResult.Content.ToString()))
                     {
                         post.State = Post.PostState.Failed;
-                        throw new Exception("Something went wrong, openAI returned empty response");
+                        throw new InvalidOperationException("Something went wrong, openAI returned empty response");
                     }
 
                     post.State = Post.PostState.Completed;
                 }
-                catch (Exception)
+                catch (InvalidOperationException)
                 {
                     post.State = Post.PostState.Incomplete;
                     throw;
