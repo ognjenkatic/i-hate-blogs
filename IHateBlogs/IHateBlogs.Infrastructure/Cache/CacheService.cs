@@ -1,4 +1,5 @@
-﻿using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Application.Common.Interfaces;
+using System;
 
 namespace IHateBlogs.Infrastructure.Cache
 {
@@ -21,7 +22,7 @@ namespace IHateBlogs.Infrastructure.Cache
         {
             if (value is null)
             {
-                throw new Exception("Cannot add null to cache");
+                throw new InvalidOperationException("Cannot add null to cache");
             }
 
             _cache[key] = value;

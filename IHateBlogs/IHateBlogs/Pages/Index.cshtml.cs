@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 
 namespace IHateBlogs.Pages
 {
@@ -14,7 +15,7 @@ namespace IHateBlogs.Pages
 
         public void OnGet()
         {
-
+            throw new NotSupportedException("Method not implemented.");
         }
     }
 }

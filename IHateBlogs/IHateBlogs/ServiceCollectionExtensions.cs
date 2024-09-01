@@ -1,6 +1,9 @@
-﻿using IHateBlogs.Application.Common.Interfaces;
+using IHateBlogs.Application.Common.Interfaces;
 using IHateBlogs.Application.Common.Util;
 using IHateBlogs.Service;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace IHateBlogs
 {
@@ -8,7 +11,7 @@ namespace IHateBlogs
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var openAiConfig = configuration.GetSection("OpenAi").Get<OpenAiConfiguration>() ?? throw new Exception("Could not read OpenAi config");
+            var openAiConfig = configuration.GetSection("OpenAi").Get<OpenAiConfiguration>() ?? throw new InvalidOperationException("Could not read OpenAi config");
 
             services.AddSingleton(openAiConfig);
             services.AddSignalR();

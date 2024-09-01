@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace IHateBlogs.Pages
 {
@@ -22,6 +23,7 @@ namespace IHateBlogs.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            _logger.LogInformation("Error page accessed with RequestId: {RequestId}", RequestId);
         }
     }
 }

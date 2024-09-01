@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
+using System;
 
 namespace IHateBlogs.Application.Common.Util
 {
@@ -34,7 +35,7 @@ namespace IHateBlogs.Application.Common.Util
                 BlogResource.Tone => Read("Moods.md"),
                 BlogResource.Subject => Read("Subjects.md"),
                 BlogResource.Audience => Read("Levels.md"),
-                _ => throw new Exception("Unsupported resource")
+                _ => throw new InvalidOperationException("Unsupported resource")
             };
         }
         
