@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IHateBlogs.Infrastructure.Persistence
 {
-    public class MigrationUtil
+    public static class MigrationUtil
     {
         public static void MigrateDatabase(IServiceProvider serviceProvider)
         {
@@ -11,7 +11,5 @@ namespace IHateBlogs.Infrastructure.Persistence
             var context = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
             context.Database.Migrate();
         }
-
-
     }
 }

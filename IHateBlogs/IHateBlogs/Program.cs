@@ -35,4 +35,4 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapHub<PostCompletionHub>("/postCompletionHub");
-app.Run();
+await app.RunAsync();
